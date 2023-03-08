@@ -1,0 +1,39 @@
+name: Build image
+
+on:
+  workflow_dispatch:
+
+env:
+  IMAGE_NAME: test-project:$GITHUB_RUN_NUMBER
+  PYTHON_VERSION: "3.10.6"
+  POETRY_VERSION: "1.4.0"
+
+jobs:
+  build_image:
+    name: build docker image
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ env.github.ref }}
+          fetch-depth: 1
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          version: ${{ env.POETRY_VERSION }}
+          virtualenvs-in-project: true
+
+      - name: Install dependencies
+        run:
+          poetry install --no-interaction --no-root
+
+      - name: Run pytest
+        run:
+          pytest
