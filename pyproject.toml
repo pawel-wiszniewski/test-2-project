@@ -7,14 +7,34 @@ readme = "README.md"
 packages = [{include = "test_2_project"}]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "3.10.6"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.2.2"
 pre-commit = "^3.1.1"
 isort = "^5.12.0"
 black = "^23.1.0"
+coverage = {version = "^6.5.0", extras = ["toml"]}
+pytest-cov = "^4.0.0"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 120
+target-version = ['py310']
+include = '\.pyi?$'
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+log_format = "%(asctime)s %(levelname)s %(message)s"
+log_date_format = "%Y-%m-%d %H:%M:%S"
+log_cli = true
+
+[tool.coverage.run]
+branch = true
+source = ["src"]
+
+[tool.coverage.report]
+show_missing = true
